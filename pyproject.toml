@@ -1,0 +1,14 @@
+[tool.poetry]
+name = "openai-model-comparison"
+version = "0.1.0"
+description = "Compare OpenAI models with a simple UI"
+authors = ["Your Name <your.email@example.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.12"
+openai = "^1.12.0"
+streamlit = "^1.32.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
