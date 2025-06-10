@@ -9,6 +9,9 @@ import streamlit as st
 from test import ask_one_async, AsyncOpenAI, PRICING_PER_MILLION
 import os
 import pandas as pd
+import json
+from datetime import datetime
+from pathlib import Path
 
 st.set_page_config(
     page_title="OpenAI Model Comparison",
@@ -83,6 +86,25 @@ if st.button("Compare Models") and api_key and prompt:
                 return await asyncio.gather(*tasks)
             
             results = asyncio.run(run_comparison())
+            
+            # Save results to JSONL file
+            log_dir = Path("logs")
+            log_dir.mkdir(exist_ok=True)
+            log_file = log_dir / "comparison_logs.jsonl"
+            
+            # Add comparison metadata
+            comparison_record = {
+                "timestamp": datetime.now().isoformat(),
+                "prompt": prompt,
+                "model1": model1,
+                "model2": model2,
+                "results": results
+            }
+            
+            with open(log_file, "a", encoding="utf-8") as f:
+                f.write(json.dumps(comparison_record, ensure_ascii=False) + "\n")
+            
+            st.success(f"Results saved to {log_file}")
             
             # Display results in columns
             col1, col2 = st.columns(2)
